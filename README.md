@@ -1,0 +1,1 @@
+# THIS IS A TEMPLETE for Project with TypeScript

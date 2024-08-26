@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    // "noUnusedLocals": true, /* Enable error reporting when local variables aren't read. */
+    // "noUnusedParameters": true, /* Raise an error when a function parameter isn't read. */
+    // "noImplicitReturns": true, /* Enable error reporting for codepaths that do not explicitly return in a function. */
+  },
+  "include": [
+    "src/**/*.ts",
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
