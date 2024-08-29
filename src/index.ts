@@ -1,8 +1,1 @@
-console.log(`[laskdjfklsajdf] -> `);
-
-// "include": [
-//     "src/**/*.ts",
-//   ],
-//   "exclude": [
-//     "node_modules"
-//   ]
+console.log("this is a project with Nodejs and TypeScript");
