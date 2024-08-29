@@ -1,1 +1,1 @@
-console.log("this is a project with Nodejs and TypeScript");
+console.log("This is a project with Nodejs and TypeScript");

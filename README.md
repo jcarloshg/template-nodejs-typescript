@@ -1,1 +1,1 @@
-# THIS IS A TEMPLETE for Project with TypeScript
+# This is a Templete Project with Nodejs and TypeScript
