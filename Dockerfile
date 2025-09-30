@@ -1,16 +1,16 @@
 FROM node:20.19.4-alpine3.22
 
-RUN addgroup backend && adduser -S -G backend user01
-USER user01
+RUN addgroup backend && adduser -S -G backend user_back
+USER user_back
 
 WORKDIR /app/
 RUN mkdir datos
 
-COPY --chown=user01:backend package*.json .
+COPY --chown=user_back:backend package*.json .
 
 RUN npm install
 
-COPY --chown=user01:backend . .
+COPY --chown=user_back:backend . .
 
 ENV API=PROOF_VALUE
 
