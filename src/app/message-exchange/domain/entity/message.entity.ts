@@ -10,10 +10,16 @@ const schema = z.object({
 export type MessageProps = z.infer<typeof schema>;
 
 export class Message {
-    private props: MessageProps;
+
+    private _props: MessageProps;
+
     constructor(data: { [key: string]: any }) {
         const parsed = schema.safeParse(data);
         if (parsed.success === false) throw new Error("Invalid message entity data");
-        this.props = parsed.data;
+        this._props = parsed.data;
+    }
+
+    public get props(): MessageProps {
+        return this._props;
     }
 }
