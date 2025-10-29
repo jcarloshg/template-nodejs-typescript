@@ -2,6 +2,7 @@ import { MessageExchangeCommand } from "../domain/message-exchange.command";
 import { MessageExchangeUseCase } from "../domain/message-exchange.use-case";
 import { EventBusKafka } from "../infra/kafka/event-bus.kafka";
 import { EventPublisherKafka } from "../infra/kafka/event-publisher.kafka";
+import { NotifyEventHandler } from "./domain-handlers/notify.event-handler";
 
 export class MessageExchangeApplication {
 
@@ -20,7 +21,14 @@ export class MessageExchangeApplication {
             const eventBus = new EventBusKafka();
             const eventPublisher = new EventPublisherKafka(eventBus);
 
-            // 2. bussiness logic
+            // register event handlers
+            const notifyEventHandler = new NotifyEventHandler();
+            eventBus.subscribe(notifyEventHandler.subscribeTo(), notifyEventHandler)
+
+
+            // ─────────────────────────────────────
+            // execute use case
+            // ─────────────────────────────────────
             const useCase = new MessageExchangeUseCase(eventPublisher);
             const result = await useCase.execute(command);
             return {

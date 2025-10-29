@@ -18,11 +18,13 @@ export class EventBusKafka implements EventBus {
     }
 
     async subscribe<T extends DomainEvent>(eventType: string, handler: EventHandler<T>): Promise<void> {
-        // if (!this.handlers.has(eventType)) {
-        //     this.handlers.set(eventType, []);
-        // }
-        // this.handlers.get(eventType)!.push(handler);
-        const consumer = this.kafka.consumer();
+
+        if (!this.handlers.has(eventType)) {
+            this.handlers.set(eventType, []);
+        }
+        this.handlers.get(eventType)!.push(handler);
+
+        const consumer = this.kafka.consumer({ groupId: `console-consumer-20144` });
 
         await consumer.connect()
         await consumer.subscribe({
