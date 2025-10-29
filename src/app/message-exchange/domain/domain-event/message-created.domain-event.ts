@@ -15,4 +15,16 @@ export class MessageCreatedDomainEvent extends DomainEvent {
         super();
         this.props = props;
     }
+
+    public toPrimitives(): Record<string, any> {
+        return {
+            metadata: this.getMetadata(),
+            data: {
+                messageId: this.props.messageId,
+                senderId: this.props.senderId,
+                content: this.props.content,
+                timestamp: this.props.timestamp,
+            }
+        };
+    }
 }

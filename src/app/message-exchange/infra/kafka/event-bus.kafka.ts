@@ -1,4 +1,4 @@
-import { Consumer, ConsumerSubscribeTopics, EachBatchPayload, Kafka, EachMessagePayload, EachMessageHandler, Partitioners } from 'kafkajs'
+import { Kafka, EachMessagePayload, Partitioners } from 'kafkajs';
 import { DomainEvent } from "@/app/shared/domain/domain-event/domain-event";
 import { EventBus } from "@/app/shared/domain/domain-event/event-bus";
 import { EventHandler } from "@/app/shared/domain/domain-event/event-handler";
@@ -7,7 +7,6 @@ import { MessageCreatedDomainEvent } from "../../domain/domain-event/message-cre
 export class EventBusKafka implements EventBus {
 
     private kafka: Kafka;
-    private consumer: Consumer;
     private isConsumerRunning: boolean = false;
 
     handlers: Map<string, EventHandler<any>[]> = new Map();
@@ -16,9 +15,6 @@ export class EventBusKafka implements EventBus {
         this.kafka = new Kafka({
             clientId: `user-service-${crypto.randomUUID()}`,
             brokers: ["localhost:9092"],
-        });
-        this.consumer = this.kafka.consumer({
-            groupId: `event-bus-${crypto.randomUUID()}`
         });
     }
 
@@ -38,13 +34,18 @@ export class EventBusKafka implements EventBus {
 
     private async startConsumer(): Promise<void> {
         try {
-            await this.consumer.connect();
-            await this.consumer.subscribe({
+            console.log("Starting Kafka consumer...");
+
+            const consumer = this.kafka.consumer({
+                groupId: 'event-bus-kafka'
+            });
+            await consumer.connect();
+            await consumer.subscribe({
                 topics: [MessageCreatedDomainEvent.eventName],
                 fromBeginning: false,
             });
 
-            await this.consumer.run({
+            await consumer.run({
                 // eachBatch: async (payload: EachBatchPayload) => {
                 //     console.log(`Processing batch from topic:`, payload.batch.topic);
                 //     console.log(`number of batch: ${payload.batch.messages.length}`);
@@ -104,14 +105,5 @@ export class EventBusKafka implements EventBus {
         }
     }
 
-    async disconnect(): Promise<void> {
-        try {
-            if (this.isConsumerRunning) {
-                await this.consumer.disconnect();
-                this.isConsumerRunning = false;
-            }
-        } catch (error) {
-            console.error('Error disconnecting consumer:', error);
-        }
-    }
+
 }
