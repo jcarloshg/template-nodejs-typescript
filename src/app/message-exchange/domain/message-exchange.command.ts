@@ -13,9 +13,15 @@ export class MessageExchangeCommand {
 
     public readonly props: MessageExchangeCommandProps;
 
-    constructor(data: MessageExchangeCommandProps) {
+    constructor(data: { [key: string]: any }) {
         const parsed = schema.safeParse(data);
-        if (parsed.success === false) throw new Error("Invalid message exchange command data");
+        if (parsed.success === false) {
+            const errorMessage = parsed.error
+                .issues
+                .map((err: any) => `${err.path.join('.')}: ${err.message}`)[0]
+                
+            throw new Error(errorMessage);
+        }
         this.props = parsed.data;
     }
 }
