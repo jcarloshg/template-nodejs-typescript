@@ -1,6 +1,5 @@
-import { emitMessage } from "@/app/shared/infrastructure/kafka/producer";
 import { Express, Router } from "express";
-import { ChatMessagePayload, ChatMessageSocket } from "../sockets/chat-message.socket";
+import { ChatMessagePayload, ChatMessageController } from "../sockets/chat-message.controller";
 
 export const messageRoute = async (app: Express) => {
     const router = Router();
@@ -28,7 +27,7 @@ export const messageRoute = async (app: Express) => {
                 content,
                 timestamp: new Date()
             }
-            ChatMessageSocket.emitChatMessage(chatMessagePayload);
+            ChatMessageController.emitChatMessage(chatMessagePayload);
             // await emitUserCreated(message);
             res
                 .status(201)

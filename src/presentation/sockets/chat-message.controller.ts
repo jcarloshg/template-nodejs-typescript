@@ -11,20 +11,20 @@ export interface ChatMessageEventBody extends EventBody {
     payload: ChatMessagePayload;
 }
 
-export class ChatMessageSocket {
+export class ChatMessageController {
 
     public static readonly eventName: EventName = 'chat-message';
-    private static instance: ChatMessageSocket;
+    private static instance: ChatMessageController;
 
     private socketIO: SocketIO;
 
     constructor(socketIO: SocketIO) {
         this.socketIO = socketIO;
-        ChatMessageSocket.instance = this;
+        ChatMessageController.instance = this;
     }
 
     public static async emitChatMessage(ChatMessagePayload: ChatMessagePayload): Promise<void> {
-        if (!ChatMessageSocket.instance) {
+        if (!ChatMessageController.instance) {
             throw new Error("ChatMessageSocket instance not initialized.");
         }
         const eventBody: ChatMessageEventBody = {
@@ -32,9 +32,9 @@ export class ChatMessageSocket {
             timestamp: new Date(),
             payload: ChatMessagePayload
         };
-        await ChatMessageSocket
+        await ChatMessageController
             .instance
             .socketIO
-            .emit(ChatMessageSocket.eventName, eventBody);
+            .emit(ChatMessageController.eventName, eventBody);
     }
 }
