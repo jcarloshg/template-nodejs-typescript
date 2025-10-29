@@ -1,9 +1,17 @@
 import express from "express";
 import cors from "cors";
+import { createServer } from 'http';
+
 import { enviromentVariables } from "./app/shared/infrastructure/utils/enviroment-variables";
 import { messageRoute } from "./presentation/routes/send.routes";
+import { SocketIO } from "./presentation/sockets/socket";
+import { ChatMessageSocket } from "./presentation/sockets/chat-message.socket";
 
 const app = express();
+const httpServer = createServer(app);
+
+const socketIO = new SocketIO(httpServer);
+new ChatMessageSocket(socketIO);
 
 // ─────────────────────────────────────
 // Middlewares
@@ -17,15 +25,11 @@ app.use(
     })
 );
 
-
 // paths
 messageRoute(app);
 
-
-
-
 const PORT = enviromentVariables.port;
-const server = app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
     console.log(`📖 Environment: ${enviromentVariables.nodeEnv}`);
 });
