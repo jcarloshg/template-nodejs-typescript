@@ -22,8 +22,11 @@ export class MessageExchangeApplication {
             const eventPublisher = new EventPublisherKafka(eventBus);
 
             // register event handlers
-            const notifyEventHandler = new NotifyEventHandler();
-            eventBus.subscribe(notifyEventHandler.subscribeTo(), notifyEventHandler)
+            const notifyEventHandler = await NotifyEventHandler.getInstance();
+            eventBus.subscribe(
+                notifyEventHandler.subscribeTo(),
+                notifyEventHandler
+            )
 
 
             // ─────────────────────────────────────

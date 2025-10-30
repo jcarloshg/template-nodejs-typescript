@@ -11,14 +11,17 @@ export class MessageCreatedDomainEvent extends DomainEvent {
     public static readonly eventName: string = "message.created";
     public readonly props: MessageCreatedDomainEventProps;
 
-    constructor(props: MessageCreatedDomainEventProps) {
-        super();
+    constructor(
+        props: MessageCreatedDomainEventProps,
+        aggregateId?: string
+    ) {
+        super(aggregateId);
         this.props = props;
     }
 
     public toPrimitives(): Record<string, any> {
         return {
-            metadata: this.getMetadata(),
+            metadata: this.toPrimitives(),
             data: {
                 messageId: this.props.messageId,
                 senderId: this.props.senderId,

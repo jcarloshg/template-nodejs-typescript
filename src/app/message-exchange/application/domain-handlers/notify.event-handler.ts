@@ -1,9 +1,23 @@
 import { EventHandler } from "@/app/shared/domain/domain-event/event-handler";
 import { MessageCreatedDomainEvent } from "../../domain/domain-event/message-created.domain-event";
+import { MessageCreatedKafkaConsumer } from "../../infra/kafka/init-kafka";
 
 export class NotifyEventHandler implements EventHandler<MessageCreatedDomainEvent> {
 
-    constructor() { }
+    private _consumer: MessageCreatedKafkaConsumer;
+    private static _instance: NotifyEventHandler;
+
+    constructor() {
+        this._consumer = new MessageCreatedKafkaConsumer(this.handle);
+    }
+
+    public static async getInstance(): Promise<NotifyEventHandler> {
+        if (!this._instance) {
+            this._instance = new NotifyEventHandler();
+            await this._instance._consumer.init();
+        }
+        return this._instance;
+    }
 
     public subscribeTo(): string {
         return MessageCreatedDomainEvent.eventName;

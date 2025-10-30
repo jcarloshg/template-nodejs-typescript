@@ -13,11 +13,4 @@ export class DomainEvent {
         return DomainEvent.eventName;
     }
 
-    public getMetadata(): Record<string, any> {
-        return {
-            eventUuid: this.eventUuid,
-            occurredOn: this.occurredOn.toISOString(),
-            aggregateId: this.aggregateId,
-        };
-    }
 }

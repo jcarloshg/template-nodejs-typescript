@@ -13,12 +13,15 @@ export class MessageAggregate extends AggregateRoot {
     public createMessage(data: { [key: string]: any }): void {
         this._message = new Message(data);
         const messageProps = this._message.props;
-        const messageCreatedDomainEvent = new MessageCreatedDomainEvent({
-            messageId: messageProps.messageId,
-            senderId: messageProps.senderId,
-            content: messageProps.content,
-            timestamp: messageProps.timestamp,
-        });
+        const messageCreatedDomainEvent = new MessageCreatedDomainEvent(
+            {
+                messageId: messageProps.messageId,
+                senderId: messageProps.senderId,
+                content: messageProps.content,
+                timestamp: messageProps.timestamp,
+            },
+            this.getAggregateRootUUID(),
+        );
         this.recordDomainEvent(messageCreatedDomainEvent);
     }
 

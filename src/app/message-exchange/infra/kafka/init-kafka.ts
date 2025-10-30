@@ -1,4 +1,4 @@
-import { Kafka, EachMessagePayload, Partitioners } from 'kafkajs';
+import { Consumer, EachBatchPayload, EachMessagePayload, Kafka, Partitioners } from 'kafkajs';
 import { MessageCreatedDomainEvent } from "@/app/message-exchange/domain/domain-event/message-created.domain-event";
 
 export class InitKafka {
@@ -27,7 +27,7 @@ export class InitKafka {
 export class MessageCreatedKafkaProducer {
     constructor() { }
 
-    public static async sendMessage(event: MessageCreatedDomainEvent): Promise<void> {
+    public static async emmit(event: MessageCreatedDomainEvent): Promise<void> {
 
         // get kafka instance & producer
         const kafka = InitKafka.getInstance().kafka;
@@ -36,22 +36,51 @@ export class MessageCreatedKafkaProducer {
         });
 
         try {
-            console.log(event.toPrimitives());
             await producer.connect();
             await producer.send({
                 topic: MessageCreatedDomainEvent.eventName,
                 messages: [
                     {
                         key: event.getEventName,
-                        value: JSON.stringify(event),
+                        value: JSON.stringify(event.toPrimitives()),
                     },
                 ],
             });
         } catch (error) {
             console.error('Error publishing event:', error);
-            throw error;
         } finally {
             await producer.disconnect();
         }
     }
+}
+
+export type HandlerFunction = (event: MessageCreatedDomainEvent) => Promise<void>;
+
+export class MessageCreatedKafkaConsumer {
+
+    private _handler: HandlerFunction;
+    private _consumer: Consumer;
+
+    constructor(handler: HandlerFunction) {
+        this._handler = handler;
+        const kafka = InitKafka.getInstance().kafka;
+        this._consumer = kafka.consumer({
+            groupId: 'event-bus-kafka'
+        });
+    }
+
+    public async init(): Promise<void> {
+        await this._consumer.connect();
+        await this._consumer.subscribe({
+            topics: [MessageCreatedDomainEvent.eventName],
+            fromBeginning: false,
+        });
+        await this._consumer.run({
+            eachMessage: async (payload: EachMessagePayload) => {
+                // await this._handler({});
+            },
+        });
+    }
+
+
 }
