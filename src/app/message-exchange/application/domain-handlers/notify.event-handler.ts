@@ -24,7 +24,15 @@ export class NotifyEventHandler implements EventHandler<MessageCreatedDomainEven
     }
 
     async handle(event: MessageCreatedDomainEventPrimitives): Promise<void> {
-        console.log("send through kafka or other transport layer");
+        try {
+            // console.log(`New message received from ${event.data.senderId}: ${event.data.content}`);
+            // const notification = `You have a new message from [${event.data.senderId}]: "${event.data.content}"`;
+            // console.log(`[NotifyEventHandler] - notification: `, notification);
+            console.log(`[${event.data.senderId}]: ${event.data.content}"` );
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            console.error(`[NotifyEventHandler] - error: `, errorMessage);
+        }
     }
 
 }

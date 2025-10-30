@@ -1,8 +1,8 @@
 import { EventHandler } from "@/app/shared/domain/domain-event/event-handler";
-import { MessageCreatedDomainEvent } from "../../domain/domain-event/message-created.domain-event";
+import { MessageCreatedDomainEvent, MessageCreatedDomainEventPrimitives } from "../../domain/domain-event/message-created.domain-event";
 import { MessageCrudRepository } from "@/app/shared/domain/repository/messgae.crud-repository";
 
-export class SaveInRepoEventHandler implements EventHandler<MessageCreatedDomainEvent> {
+export class SaveInRepoEventHandler implements EventHandler<MessageCreatedDomainEventPrimitives> {
 
     constructor(
         private readonly repository: MessageCrudRepository
@@ -12,13 +12,12 @@ export class SaveInRepoEventHandler implements EventHandler<MessageCreatedDomain
         return MessageCreatedDomainEvent.eventName;
     }
 
-    async handle(event: MessageCreatedDomainEvent): Promise<void> {
-        const props = event.props;
+    async handle(event: MessageCreatedDomainEventPrimitives): Promise<void> {
         await this.repository.create({
-            id: props.messageId,
-            senderId: props.senderId,
-            content: props.content,
-            timestamp: new Date(props.timestamp)
+            id: event.data.messageId,
+            senderId: event.data.senderId,
+            content: event.data.content,
+            timestamp: new Date(event.data.timestamp),
         });
     }
 

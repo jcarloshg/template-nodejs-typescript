@@ -77,7 +77,29 @@ export class MessageCreatedKafkaConsumer {
         });
         await this._consumer.run({
             eachMessage: async (payload: EachMessagePayload) => {
-                console.log(`payload: `, payload.message.value?.toString());
+
+                try {
+                    // console.log(`payload: `, payload.message.value?.toString());
+                    const messageValue = payload.message.value?.toString() ?? "";
+                    const messageValueObject = JSON.parse(messageValue);
+                    const eventPrimitives: MessageCreatedDomainEventPrimitives = {
+                        eventName: messageValueObject.eventName,
+                        eventUuid: messageValueObject.eventUuid,
+                        occurredOn: messageValueObject.occurredOn,
+                        aggregateId: messageValueObject.aggregateId,
+                        data: {
+                            messageId: messageValueObject.data.messageId,
+                            senderId: messageValueObject.data.senderId,
+                            content: messageValueObject.data.content,
+                            timestamp: messageValueObject.data.timestamp,
+                        }
+                    }
+                    await this._handler(eventPrimitives);
+                } catch (error) {
+                    console.error('Error handling message:', error);
+                }
+
+
                 // const event = MessageCreatedDomainEvent.fromPrimitives(JSON.parse(payload.message.value));
                 // await this._handler(event);
             },
