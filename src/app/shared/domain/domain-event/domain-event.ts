@@ -14,3 +14,10 @@ export class DomainEvent {
     }
 
 }
+
+export interface DomainEventPrimitives {
+    eventName: string;
+    eventUuid: string;
+    occurredOn: string;
+    aggregateId?: string;
+}

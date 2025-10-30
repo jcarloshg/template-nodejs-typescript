@@ -1,4 +1,4 @@
-import { DomainEvent } from "@/app/shared/domain/domain-event/domain-event";
+import { DomainEvent, DomainEventPrimitives } from "@/app/shared/domain/domain-event/domain-event";
 
 export interface MessageCreatedDomainEventProps {
     messageId: string;
@@ -20,8 +20,11 @@ export class MessageCreatedDomainEvent extends DomainEvent {
     }
 
     public toPrimitives(): Record<string, any> {
-        return {
-            metadata: this.toPrimitives(),
+        const primitives: MessageCreatedDomainEventPrimitives = {
+            eventName: MessageCreatedDomainEvent.eventName,
+            eventUuid: this.eventUuid,
+            occurredOn: this.occurredOn.toISOString(),
+            aggregateId: this.aggregateId,
             data: {
                 messageId: this.props.messageId,
                 senderId: this.props.senderId,
@@ -29,5 +32,16 @@ export class MessageCreatedDomainEvent extends DomainEvent {
                 timestamp: this.props.timestamp,
             }
         };
+        return primitives;
     }
+}
+
+
+export interface MessageCreatedDomainEventPrimitives extends DomainEventPrimitives {
+    data: {
+        messageId: string;
+        senderId: string;
+        content: string;
+        timestamp: string;
+    };
 }

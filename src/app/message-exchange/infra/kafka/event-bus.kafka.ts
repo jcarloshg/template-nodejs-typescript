@@ -1,4 +1,4 @@
-import { DomainEvent } from "@/app/shared/domain/domain-event/domain-event";
+import { DomainEvent, DomainEventPrimitives } from "@/app/shared/domain/domain-event/domain-event";
 import { EventBus } from "@/app/shared/domain/domain-event/event-bus";
 import { EventHandler } from "@/app/shared/domain/domain-event/event-handler";
 import { MessageCreatedDomainEvent } from "../../domain/domain-event/message-created.domain-event";
@@ -13,7 +13,7 @@ export class EventBusKafka implements EventBus {
         await MessageCreatedKafkaProducer.emmit(event as MessageCreatedDomainEvent);
     }
 
-    async subscribe<T extends DomainEvent>(eventType: string, handler: EventHandler<T>): Promise<void> {
+    async subscribe<T extends DomainEventPrimitives>(eventType: string, handler: EventHandler<T>): Promise<void> {
         if (!this.handlers.has(eventType)) {
             this.handlers.set(eventType, []);
         }

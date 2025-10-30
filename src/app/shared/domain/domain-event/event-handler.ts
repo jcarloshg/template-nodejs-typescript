@@ -1,6 +1,6 @@
-import { DomainEvent } from "./domain-event";
+import { DomainEvent, DomainEventPrimitives } from "./domain-event";
 
-export class EventHandler<T extends DomainEvent> {
+export class EventHandler<T extends DomainEventPrimitives> {
   async handle(event: T): Promise<void> {
     throw new Error("EventHandler.handle - Method not implemented.");
   }

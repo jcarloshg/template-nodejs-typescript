@@ -1,8 +1,8 @@
 import { EventHandler } from "@/app/shared/domain/domain-event/event-handler";
-import { MessageCreatedDomainEvent } from "../../domain/domain-event/message-created.domain-event";
+import { MessageCreatedDomainEvent, MessageCreatedDomainEventPrimitives } from "../../domain/domain-event/message-created.domain-event";
 import { MessageCreatedKafkaConsumer } from "../../infra/kafka/init-kafka";
 
-export class NotifyEventHandler implements EventHandler<MessageCreatedDomainEvent> {
+export class NotifyEventHandler implements EventHandler<MessageCreatedDomainEventPrimitives> {
 
     private _consumer: MessageCreatedKafkaConsumer;
     private static _instance: NotifyEventHandler;
@@ -23,7 +23,7 @@ export class NotifyEventHandler implements EventHandler<MessageCreatedDomainEven
         return MessageCreatedDomainEvent.eventName;
     }
 
-    async handle(event: MessageCreatedDomainEvent): Promise<void> {
+    async handle(event: MessageCreatedDomainEventPrimitives): Promise<void> {
         console.log("send through kafka or other transport layer");
     }
 

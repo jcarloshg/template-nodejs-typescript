@@ -1,5 +1,5 @@
 import { Consumer, EachBatchPayload, EachMessagePayload, Kafka, Partitioners } from 'kafkajs';
-import { MessageCreatedDomainEvent } from "@/app/message-exchange/domain/domain-event/message-created.domain-event";
+import { MessageCreatedDomainEvent, MessageCreatedDomainEventPrimitives } from "@/app/message-exchange/domain/domain-event/message-created.domain-event";
 
 export class InitKafka {
 
@@ -54,7 +54,7 @@ export class MessageCreatedKafkaProducer {
     }
 }
 
-export type HandlerFunction = (event: MessageCreatedDomainEvent) => Promise<void>;
+export type HandlerFunction = (event: MessageCreatedDomainEventPrimitives) => Promise<void>;
 
 export class MessageCreatedKafkaConsumer {
 
@@ -77,7 +77,9 @@ export class MessageCreatedKafkaConsumer {
         });
         await this._consumer.run({
             eachMessage: async (payload: EachMessagePayload) => {
-                // await this._handler({});
+                console.log(`payload: `, payload.message.value?.toString());
+                // const event = MessageCreatedDomainEvent.fromPrimitives(JSON.parse(payload.message.value));
+                // await this._handler(event);
             },
         });
     }
