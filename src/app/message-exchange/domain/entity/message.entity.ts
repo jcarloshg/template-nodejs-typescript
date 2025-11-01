@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 const schema = z.object({
     messageId: z.string(),
-    senderId: z.string(),
-    content: z.string(),
+    senderId: z.string().max(50),
+    content: z.string().max(250),
     timestamp: z.iso.datetime(),
 });
 
