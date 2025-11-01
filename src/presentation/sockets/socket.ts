@@ -1,11 +1,8 @@
-import { Express } from "express";
 import { Server } from 'socket.io';
-import { createServer, Server as HttpServer } from 'http';
+import { Server as HttpServer } from 'http';
 
 export type EventName = string;
 export interface EventBody {
-    eventUuid: string;
-    timestamp: Date;
     payload: any;
 };
 

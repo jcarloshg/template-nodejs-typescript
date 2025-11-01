@@ -1,4 +1,4 @@
-import { EventBody, EventName, SocketIO } from "./socket";
+import { EventName, SocketIO } from "./socket";
 
 export interface ChatMessagePayload {
     messageId: string;
@@ -7,7 +7,7 @@ export interface ChatMessagePayload {
     timestamp: Date;
 }
 
-export interface ChatMessageEventBody extends EventBody {
+export interface ChatMessageEventBody {
     payload: ChatMessagePayload;
 }
 
@@ -23,18 +23,33 @@ export class ChatMessageController {
         ChatMessageController.instance = this;
     }
 
-    public static async emitChatMessage(ChatMessagePayload: ChatMessagePayload): Promise<void> {
+    public static initialize(socketIO: SocketIO): void {
+        if (!ChatMessageController.instance) {
+            ChatMessageController.instance = new ChatMessageController(socketIO);
+        }
+    }
+
+    public static getInstance(): ChatMessageController {
+        if (!ChatMessageController.instance) {
+            throw new Error("ChatMessageController not initialized.");
+        }
+        return ChatMessageController.instance;
+    }
+
+    public async emitChatMessage(chatMessagePayload: ChatMessagePayload): Promise<void> {
+
         if (!ChatMessageController.instance) {
             throw new Error("ChatMessageSocket instance not initialized.");
         }
+
         const eventBody: ChatMessageEventBody = {
-            eventUuid: crypto.randomUUID(),
-            timestamp: new Date(),
-            payload: ChatMessagePayload
+            payload: chatMessagePayload
         };
+
         await ChatMessageController
             .instance
             .socketIO
+            // change ChatMessageController.eventName for id chat room
             .emit(ChatMessageController.eventName, eventBody);
     }
 }

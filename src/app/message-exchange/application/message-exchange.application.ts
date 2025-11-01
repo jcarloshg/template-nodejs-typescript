@@ -1,8 +1,10 @@
+import { ChatMessageController } from "@/presentation/sockets/chat-message.controller";
 import { MessageExchangeCommand } from "../domain/message-exchange.command";
 import { MessageExchangeUseCase } from "../domain/message-exchange.use-case";
 import { EventBusKafka } from "../infra/kafka/event-bus.kafka";
 import { EventPublisherKafka } from "../infra/kafka/event-publisher.kafka";
 import { NotifyEventHandler } from "./domain-handlers/notify.event-handler";
+import { SendMessageToRecipientsEventHandler } from "./domain-handlers/send-message-to-recipients.event-handler";
 
 export class MessageExchangeApplication {
 
@@ -22,11 +24,18 @@ export class MessageExchangeApplication {
             const eventPublisher = new EventPublisherKafka(eventBus);
 
             // register event handlers
-            const notifyEventHandler = await NotifyEventHandler.getInstance();
+            // const notifyEventHandler = await NotifyEventHandler
+            //     .getInstance();
+            // eventBus.subscribe(
+            //     notifyEventHandler.subscribeTo(),
+            //     notifyEventHandler
+            // );
+            const sendMessageToRecipientsEventHandler = await SendMessageToRecipientsEventHandler
+                .getInstance();
             eventBus.subscribe(
-                notifyEventHandler.subscribeTo(),
-                notifyEventHandler
-            )
+                sendMessageToRecipientsEventHandler.subscribeTo(),
+                sendMessageToRecipientsEventHandler
+            );
 
 
             // ─────────────────────────────────────

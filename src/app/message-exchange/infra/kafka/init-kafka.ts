@@ -69,6 +69,10 @@ export class MessageCreatedKafkaConsumer {
         });
     }
 
+    public setHandler(handler: HandlerFunction) {
+        this._handler = handler;
+    }
+
     public async init(): Promise<void> {
         await this._consumer.connect();
         await this._consumer.subscribe({
@@ -79,6 +83,11 @@ export class MessageCreatedKafkaConsumer {
             eachMessage: async (payload: EachMessagePayload) => {
 
                 try {
+
+                    if (!this._handler) {
+                        throw new Error("Handler function not set for MessageCreatedKafkaConsumer");
+                    }
+
                     // console.log(`payload: `, payload.message.value?.toString());
                     const messageValue = payload.message.value?.toString() ?? "";
                     const messageValueObject = JSON.parse(messageValue);
@@ -96,7 +105,8 @@ export class MessageCreatedKafkaConsumer {
                     }
                     await this._handler(eventPrimitives);
                 } catch (error) {
-                    console.error('Error handling message:', error);
+                    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+                    console.error('[MessageCreatedKafkaConsumer] - [ERROR]:', errorMessage);
                 }
 
 

@@ -11,7 +11,8 @@ const app = express();
 const httpServer = createServer(app);
 
 const socketIO = new SocketIO(httpServer);
-new ChatMessageController(socketIO);
+ChatMessageController.initialize(socketIO);
+// new ChatMessageController(socketIO);
 
 // ─────────────────────────────────────
 // Middlewares
