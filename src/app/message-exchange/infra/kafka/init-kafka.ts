@@ -1,4 +1,4 @@
-import { Consumer, EachBatchPayload, EachMessagePayload, Kafka, Partitioners } from 'kafkajs';
+import { Consumer, EachMessagePayload, Kafka, Partitioners } from 'kafkajs';
 import { MessageCreatedDomainEvent, MessageCreatedDomainEventPrimitives } from "@/app/message-exchange/domain/domain-event/message-created.domain-event";
 
 export class InitKafka {
