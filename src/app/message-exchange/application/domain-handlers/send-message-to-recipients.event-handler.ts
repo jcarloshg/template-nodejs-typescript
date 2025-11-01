@@ -9,7 +9,10 @@ export class SendMessageToRecipientsEventHandler implements EventHandler<Message
     private static _instance: SendMessageToRecipientsEventHandler;
 
     constructor() {
-        this._consumer = new MessageCreatedKafkaConsumer(this.handle);
+        this._consumer = new MessageCreatedKafkaConsumer(
+            'send-message-to-recipients-event-handler',
+            this.handle
+        );
     }
 
     public subscribeTo(): string {

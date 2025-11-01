@@ -58,14 +58,19 @@ export type HandlerFunction = (event: MessageCreatedDomainEventPrimitives) => Pr
 
 export class MessageCreatedKafkaConsumer {
 
+    private costumer_name: string;
     private _handler: HandlerFunction;
     private _consumer: Consumer;
 
-    constructor(handler: HandlerFunction) {
+    constructor(
+        costumer_name: string,
+        handler: HandlerFunction
+    ) {
+        this.costumer_name = costumer_name;
         this._handler = handler;
         const kafka = InitKafka.getInstance().kafka;
         this._consumer = kafka.consumer({
-            groupId: 'event-bus-kafka'
+            groupId: `message-created-${this.costumer_name}`
         });
     }
 

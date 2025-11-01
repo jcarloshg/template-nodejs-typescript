@@ -8,7 +8,10 @@ export class NotifyEventHandler implements EventHandler<MessageCreatedDomainEven
     private static _instance: NotifyEventHandler;
 
     constructor() {
-        this._consumer = new MessageCreatedKafkaConsumer(this.handle);
+        this._consumer = new MessageCreatedKafkaConsumer(
+            'notify-event-handler',
+            this.handle
+        );
     }
 
     public static async getInstance(): Promise<NotifyEventHandler> {
