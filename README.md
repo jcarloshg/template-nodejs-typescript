@@ -9,6 +9,9 @@
 
 This is a template project using Node.js and TypeScript, following a hexagonal architecture.
 
+- 🟦 Node.js, 🟪 TypeScript, 🛠️ Hexagonal Architecture, 🧪 Unit Testing (placeholder), 🛑 Clean Code Principles
+- 🐳 Docker, 🐘 PostgreSQL (infra), 🧑‍💻 Nodemon, 🟦 ts-node, 📦 Zod (validation), 🧹 Clean script, 📦 CORS
+
 ## 📄 Project Information
 
 - **Name:** hexagonal-templeate
